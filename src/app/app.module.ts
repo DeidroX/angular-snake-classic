@@ -3,16 +3,18 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { ButtonDirective } from './core/directives/button.directive';
+import { HeaderComponent } from './components/header/header.component';
+import { GameCanvasComponent } from './components/game-canvas/game-canvas.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ButtonDirective
+    HeaderComponent,
+    GameCanvasComponent,
+    ButtonDirective,
   ],
-  imports: [
-    BrowserModule
-  ],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
