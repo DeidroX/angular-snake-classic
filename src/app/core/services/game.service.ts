@@ -29,12 +29,9 @@ export class GameService {
   // TODO:
 
   // SPEED OF THE GAME BASED ON SIZE OF THE SNAKE -> SPEED ON TIMER
-  // POWERUP
+  // ADDING POWERUP LOGIC
   // LOSING CONDITION (snake touches itself)
-  // SCOREBOARD
-  // START GAME BUTTON AT THE BEGINNING
   // TRY AGAIN BUTTON IF LOSING
-  // PAUSE/RESUME BUTTON
 
   constructor() {}
 
