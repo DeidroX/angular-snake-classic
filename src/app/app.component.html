@@ -1,6 +1,11 @@
 <div class="wrapper">
   <app-header></app-header>
-  <app-score class="score"></app-score>
-  <app-game-canvas></app-game-canvas>
+  <div *ngIf="!hasStarted">
+    <button class="start-button" (click)="hasStarted = !hasStarted">Push to start the game</button>
+  </div>
+  <div *ngIf="hasStarted" class="game-screen">
+    <app-score class="score"></app-score>
+    <app-game-canvas></app-game-canvas>
+  </div>
   <app-footer></app-footer>
 </div>

@@ -11,6 +11,25 @@
   align-items: center;
 }
 
+.start-button {
+  border-style: none;
+  padding: 1em;
+  border-radius: 1em;
+  box-shadow: 2px 2px 4px black;
+  font-size: 1em;
+  background-color: black;
+  color: #86f3ff;
+  font-weight: bold;
+  margin: 5em 0;
+}
+
+.game-screen {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
 .score {
-    margin: 0 250px 0 0;
+  align-self: flex-start;
 }
