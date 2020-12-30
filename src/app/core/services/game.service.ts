@@ -1,47 +1,130 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Area } from '../models/area.model';
-import { PowerUp } from '../models/power-up.model';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { Board } from '../models/board.model';
+import { Food } from '../models/food.model';
 import { Snake } from '../models/snake.model';
-import { Button } from '../types/button.type';
+import { Direction } from '../types/direction.type';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
-  readonly areaWidth = 525;
-  readonly areaHeight = 525;
-  readonly snakeWidth = 20;
-  readonly snakeHeight = 20;
+  context: CanvasRenderingContext2D;
 
-  buttonActive = new BehaviorSubject<Button>('ArrowRight');
+  // Size of the board
+  readonly width = 325;
+  readonly height = 325;
 
-  area = new Area(this.areaWidth, this.areaHeight);
-  snake = new Snake(0, 0, this.snakeWidth, this.snakeHeight);
-  powerUp = new PowerUp(0, 0, 20, 20);
+  // Size of snake and powerup
+  readonly objectsWidth = 25;
+  readonly objectsHeight = 25;
+
+  controls = new BehaviorSubject<Direction>('right');
+  gameControlsSubscription: Subscription;
+
+  score$ = new BehaviorSubject<number>(0);
+
+  area = new Board(this.width, this.height);
+  snake = new Snake(0, 0, this.objectsWidth, this.objectsHeight);
+  powerUp = new Food(0, 0, this.objectsWidth, this.objectsHeight);
 
   // TODO:
-  // winning and losing
-  // powerups
+
+  // SPEED OF THE GAME BASED ON SIZE OF THE SNAKE -> SPEED ON TIMER
+  // POWERUP
+  // LOSING CONDITION (snake touches itself)
+  // SCOREBOARD
+  // START GAME BUTTON AT THE BEGINNING
+  // TRY AGAIN BUTTON IF LOSING
+  // PAUSE/RESUME BUTTON
 
   constructor() {}
 
-  spawnSnake(context: CanvasRenderingContext2D): void {
-    context.fillRect(
-      (this.areaWidth - this.snakeWidth) / 2,
-      (this.areaHeight - this.snakeHeight) / 2,
-      this.snakeWidth,
-      this.snakeHeight
+  initGame(context: CanvasRenderingContext2D): void {
+    this.context = context;
+    this.initBoard();
+    this.spawnSnake();
+    this.spawnFood();
+
+    this.go();
+    // Start timer (animFrame) AND listen to control events -> start with moving right
+  }
+
+  go(): void {
+    this.gameControlsSubscription = this.controls.subscribe((direction) => {
+      switch (direction) {
+        case 'up':
+          // this.moveUp();
+          break;
+        case 'down':
+          // this.moveDown();
+          break;
+        case 'left':
+          // this.moveLeft();
+          break;
+        case 'right':
+          // this.moveRight();
+          break;
+        default:
+          break;
+      }
+      console.log(direction);
+    });
+  }
+
+  initBoard(): void {
+    this.context.canvas.width = this.width;
+    this.context.canvas.height = this.height;
+    this.context.fillRect(0, 0, this.width, this.height);
+    this.context.fillStyle = 'black';
+    // NOT NECESSARY CODE (Grid structure):
+    this.context.strokeStyle = 'black';
+    this.context.lineWidth = 1;
+    for (let x = 0; x <= this.width; x += 20) {
+      for (let y = 0; y <= this.height; y += 20) {
+        this.context.moveTo(x, 0);
+        this.context.lineTo(x, this.height);
+        this.context.stroke();
+        this.context.moveTo(0, y);
+        this.context.lineTo(this.width, y);
+        this.context.stroke();
+      }
+    }
+  }
+
+  spawnSnake(): void {
+    this.context.fillStyle = 'lime';
+    this.context.fillRect(
+      (this.width - this.objectsWidth) / 2,
+      (this.height - this.objectsHeight) / 2,
+      this.objectsWidth,
+      this.objectsHeight
     );
   }
 
-  moveRight(): void {
-    // let testNum = 3;
-    // setInterval(() => {
-    //     if (testNum !== 0) {
-
-    //         testNum--;
-    //     }
-    // }, 1000);
+  spawnFood(): void {
+    this.context.fillStyle = 'red';
+    this.context.fillRect(
+      (this.width - this.objectsWidth) / 4,
+      (this.height - this.objectsHeight) / 4,
+      this.objectsWidth,
+      this.objectsHeight
+    );
   }
 
-  pickUpPowerUp(): void {}
+  moveUp(): void {}
+
+  moveDown(): void {}
+
+  moveRight(): void {}
+
+  moveLeft(): void {}
+
+  pickUpFood(): void {
+    // TODO: Make snake larger, increase score subject
+  }
+
+  clearSubscription(): void {
+    if (this.gameControlsSubscription) {
+      this.gameControlsSubscription.unsubscribe();
+    }
+  }
 }

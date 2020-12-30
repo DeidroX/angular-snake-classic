@@ -3,7 +3,7 @@ export class Snake {
   y: number;
   width: number;
   height: number;
-  // constructor(pieces: number, x: number, y: number, width: number, height: number) {
+  // constructor(size: number, x: number, y: number, width: number, height: number) {
   constructor(x: number, y: number, width: number, height: number) {
     this.x = x;
     this.y = y;

@@ -1,4 +1,4 @@
-export class Area {
+export class Board {
   width: number;
   height: number;
 

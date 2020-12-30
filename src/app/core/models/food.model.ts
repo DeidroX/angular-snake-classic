@@ -1,4 +1,4 @@
-export class PowerUp {
+export class Food {
   x: number;
   y: number;
   width: number;
