@@ -5,4 +5,5 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## How to run the game
 
 This project is published via GitHub pages. Open the following link to play the game:
-`TODO`
+
+[Snake Game](https://deidrox.github.io/angular-snake-classic)
