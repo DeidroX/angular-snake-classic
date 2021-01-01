@@ -21,4 +21,11 @@ import { ScoreComponent } from './components/score/score.component';
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    // Check if on non desktop device
+    if (window.screen.width < 900) {
+      window.screen.orientation.lock('landscape');
+    }
+  }
+}
