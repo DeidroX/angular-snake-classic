@@ -9,7 +9,7 @@ import { GameService } from '../../core/services/game.service';
 
 @Component({
   selector: 'app-game-canvas',
-  template: '<canvas appControls #canvas></canvas>',
+  template: '<canvas (click)="onTryAgain()" appControls #canvas></canvas>',
   styles: ['canvas {box-shadow: 4px 4px 10px black; margin: 0; padding: 0; }'],
 })
 export class GameCanvasComponent implements OnInit, OnDestroy {
@@ -23,5 +23,11 @@ export class GameCanvasComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.gameService.clearControlsSubscription();
+  }
+
+  onTryAgain(): void {
+    if (this.gameService.isGameOver) {
+      this.gameService.clearBoard();
+    }
   }
 }

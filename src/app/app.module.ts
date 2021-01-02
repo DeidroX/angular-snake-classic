@@ -6,7 +6,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { GameCanvasComponent } from './components/game-canvas/game-canvas.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ControlsDirective } from './core/directives/controls.directive';
-import { ScoreComponent } from './components/score/score.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +13,6 @@ import { ScoreComponent } from './components/score/score.component';
     HeaderComponent,
     GameCanvasComponent,
     FooterComponent,
-    ScoreComponent,
     ControlsDirective,
   ],
   imports: [BrowserModule],
