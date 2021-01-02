@@ -1,35 +1,44 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Board } from '../models/board.model';
-import { Food } from '../models/food.model';
-import { Snake } from '../models/snake.model';
 import { Direction } from '../types/direction.type';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
+  // Context
   context: CanvasRenderingContext2D;
 
   // Size of the board
-  readonly width = 325;
-  readonly height = 325;
+  readonly width = 324;
+  readonly height = 324;
+  readonly tileCount = 18;
+  readonly tileSize = this.width / this.tileCount - 1;
 
-  // Size of snake and powerup
-  readonly objectsWidth = 25;
-  readonly objectsHeight = 25;
+  // Snake start position
+  snakeX = 9;
+  snakeY = 9;
 
+  // Food position
+  foodX = Math.floor(Math.random() * this.tileCount);
+  foodY = Math.floor(Math.random() * this.tileCount);
+
+  // Controls
   controls = new BehaviorSubject<Direction>('right');
   gameControlsSubscription: Subscription;
+  xVelocity = 0;
+  yVelocity = 0;
 
+  // Speed
+  readonly SPEED = 100;
+  gameSpeed = this.SPEED;
+  currentTime = Date.now();
+
+  // Score
   score$ = new BehaviorSubject<number>(0);
-
-  area = new Board(this.width, this.height);
-  snake = new Snake(0, 0, this.objectsWidth, this.objectsHeight);
-  powerUp = new Food(0, 0, this.objectsWidth, this.objectsHeight);
+  score = 0;
 
   // TODO:
 
-  // SPEED OF THE GAME BASED ON SIZE OF THE SNAKE -> SPEED ON TIMER
-  // ADDING POWERUP LOGIC
+  // SIZE OF SNAKE
   // LOSING CONDITION (snake touches itself)
   // TRY AGAIN BUTTON IF LOSING
 
@@ -37,89 +46,114 @@ export class GameService {
 
   initGame(context: CanvasRenderingContext2D): void {
     this.context = context;
-    this.initBoard();
-    this.spawnSnake();
-    this.spawnFood();
-
-    this.go();
-    // Start timer (animFrame) AND listen to control events -> start with moving right
+    this.context.canvas.width = this.width;
+    this.context.canvas.height = this.height;
+    this.initGameControls();
+    this.startGameLoop();
   }
 
-  go(): void {
+  startGameLoop(): void {
+    if (Date.now() > this.currentTime) {
+      this.currentTime += this.gameSpeed;
+      this.drawBoard();
+      this.changeSnakePosition();
+      this.checkFoodCollision();
+      this.drawFood();
+      this.drawSnake();
+    }
+    requestAnimationFrame(this.startGameLoop.bind(this));
+  }
+
+  initGameControls(): void {
     this.gameControlsSubscription = this.controls.subscribe((direction) => {
       switch (direction) {
         case 'up':
-          // this.moveUp();
+          this.moveUp();
           break;
         case 'down':
-          // this.moveDown();
+          this.moveDown();
           break;
         case 'left':
-          // this.moveLeft();
+          this.moveLeft();
           break;
         case 'right':
-          // this.moveRight();
+          this.moveRight();
           break;
         default:
           break;
       }
-      console.log(direction);
     });
   }
 
-  initBoard(): void {
-    this.context.canvas.width = this.width;
-    this.context.canvas.height = this.height;
-    this.context.fillRect(0, 0, this.width, this.height);
+  drawBoard(): void {
     this.context.fillStyle = 'black';
-    // NOT NECESSARY CODE (Grid structure):
-    this.context.strokeStyle = 'black';
-    this.context.lineWidth = 1;
-    for (let x = 0; x <= this.width; x += 20) {
-      for (let y = 0; y <= this.height; y += 20) {
-        this.context.moveTo(x, 0);
-        this.context.lineTo(x, this.height);
-        this.context.stroke();
-        this.context.moveTo(0, y);
-        this.context.lineTo(this.width, y);
-        this.context.stroke();
-      }
+    this.context.fillRect(0, 0, this.width, this.height);
+  }
+
+  drawSnake(): void {
+    this.context.fillStyle = 'lime';
+    this.context.fillRect(
+      this.snakeX * this.tileCount,
+      this.snakeY * this.tileCount,
+      this.tileSize,
+      this.tileSize
+    );
+  }
+
+  drawFood(): void {
+    this.context.fillStyle = 'red';
+    this.context.fillRect(
+      this.foodX * this.tileCount,
+      this.foodY * this.tileCount,
+      this.tileSize,
+      this.tileSize
+    );
+  }
+
+  checkFoodCollision(): void {
+    if (this.snakeX === this.foodX && this.snakeY === this.foodY) {
+      this.foodX = Math.floor(Math.random() * this.tileCount);
+      this.foodY = Math.floor(Math.random() * this.tileCount);
+      this.gameSpeed = this.SPEED - this.score;
+      this.score$.next(++this.score);
     }
   }
 
-  spawnSnake(): void {
-    this.context.fillStyle = 'lime';
-    this.context.fillRect(
-      (this.width - this.objectsWidth) / 2,
-      (this.height - this.objectsHeight) / 2,
-      this.objectsWidth,
-      this.objectsHeight
-    );
+  changeSnakePosition(): void {
+    this.snakeX += this.xVelocity;
+    this.snakeY += this.yVelocity;
+    if (this.snakeX < 0) {
+      this.snakeX = this.tileCount - 1;
+    } else if (this.snakeX > this.tileCount - 1) {
+      this.snakeX = 0;
+    } else if (this.snakeY < 0) {
+      this.snakeY = this.tileCount - 1;
+    } else if (this.snakeY > this.tileCount - 1) {
+      this.snakeY = 0;
+    }
   }
 
-  spawnFood(): void {
-    this.context.fillStyle = 'red';
-    this.context.fillRect(
-      (this.width - this.objectsWidth) / 4,
-      (this.height - this.objectsHeight) / 4,
-      this.objectsWidth,
-      this.objectsHeight
-    );
+  moveUp(): void {
+    this.yVelocity = -1;
+    this.xVelocity = 0;
   }
 
-  moveUp(): void {}
-
-  moveDown(): void {}
-
-  moveRight(): void {}
-
-  moveLeft(): void {}
-
-  pickUpFood(): void {
-    // TODO: Make snake larger, increase score subject
+  moveDown(): void {
+    this.yVelocity = 1;
+    this.xVelocity = 0;
   }
 
-  clearSubscription(): void {
+  moveRight(): void {
+    this.xVelocity = 1;
+    this.yVelocity = 0;
+  }
+
+  moveLeft(): void {
+    this.xVelocity = -1;
+    this.yVelocity = 0;
+  }
+
+  clearControlsSubscription(): void {
     if (this.gameControlsSubscription) {
       this.gameControlsSubscription.unsubscribe();
     }

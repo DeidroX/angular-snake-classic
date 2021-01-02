@@ -10,7 +10,7 @@ import { GameService } from '../../core/services/game.service';
 @Component({
   selector: 'app-game-canvas',
   template: '<canvas appControls #canvas></canvas>',
-  styles: ['canvas {border: 2px solid #008b9b; margin: 0; padding: 0; }'],
+  styles: ['canvas {box-shadow: 4px 4px 10px black; margin: 0; padding: 0; }'],
 })
 export class GameCanvasComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
@@ -22,6 +22,6 @@ export class GameCanvasComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gameService.clearSubscription();
+    this.gameService.clearControlsSubscription();
   }
 }
