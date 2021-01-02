@@ -20,10 +20,5 @@ import { ControlsDirective } from './core/directives/controls.directive';
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor() {
-    // Check if on non desktop device
-    if (window.screen.width < 900) {
-      window.screen.orientation.lock('landscape');
-    }
-  }
+  constructor() {}
 }
