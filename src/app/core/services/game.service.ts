@@ -68,6 +68,7 @@ export class GameService {
     this.drawSnake();
     this.drawFood();
     this.drawScore();
+    this.drawMode();
     this.gameLoopInterval = window.setTimeout(
       this.startGameLoop.bind(this),
       this.gameSpeed
@@ -120,6 +121,20 @@ export class GameService {
   tryAgain(): void {
     this.clearBoard();
     this.startGameLoop();
+  }
+
+  drawMode(): void {
+    this.context.fillStyle = '#86f3ff';
+    this.context.font = '10px monospace';
+    let mode: string;
+    if (this.difficultySpeed === 150) {
+      mode = 'Easy';
+    } else if (this.difficultySpeed === 100) {
+      mode = 'Medium';
+    } else if (this.difficultySpeed === 75) {
+      mode = 'Hard';
+    }
+    this.context.fillText('Mode: ' + mode, this.width - 80, 40);
   }
 
   drawScore(): void {
@@ -214,9 +229,9 @@ export class GameService {
   drawGameOverScreen(): void {
     this.context.fillStyle = '#86f3ff';
     this.context.font = '40px monospace';
-    this.context.fillText('Game Over!', 55, this.height / 2);
+    this.context.fillText('Game Over!', 53, this.height / 2);
     this.context.font = '20px monospace';
-    this.context.fillText('Push to try again', 65, this.height / 1.7);
+    this.context.fillText('Push to try again', 63, this.height / 1.7);
   }
 
   moveUp(): void {
