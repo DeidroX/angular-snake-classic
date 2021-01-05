@@ -5,7 +5,7 @@
       Push to start the game
     </button>
   </div>
-  <div *ngIf="hasStarted" class="game-screen">
+  <div class="noselect" *ngIf="hasStarted" class="game-screen">
     <app-game-canvas></app-game-canvas>
   </div>
   <div *ngIf="!hasStarted">

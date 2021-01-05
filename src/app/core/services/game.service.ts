@@ -31,8 +31,8 @@ export class GameService {
 
   // Controls
   readonly controls = new BehaviorSubject<Direction>('right');
-  inverted = false;
   gameControlsSubscription: Subscription;
+  inverted = false;
   xVelocity = 0;
   yVelocity = 0;
 
@@ -214,9 +214,9 @@ export class GameService {
   drawGameOverScreen(): void {
     this.context.fillStyle = '#86f3ff';
     this.context.font = '40px monospace';
-    this.context.fillText('Game Over!', 57, this.height / 2);
+    this.context.fillText('Game Over!', 55, this.height / 2);
     this.context.font = '20px monospace';
-    this.context.fillText('Push to try again', 67, this.height / 1.7);
+    this.context.fillText('Push to try again', 65, this.height / 1.7);
   }
 
   moveUp(): void {

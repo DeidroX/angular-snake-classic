@@ -1,10 +1,12 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { GameService } from '../services/game.service';
 import { Direction } from '../types/direction.type';
 
 @Directive({ selector: '[appControls]' })
-export class ControlsDirective {
-  directionMode: Direction = 'right';
+export class ControlsDirective implements OnInit, OnDestroy {
+  directionMode: Direction;
+  gameControlsSubscription: Subscription;
   readonly minTimeGap = 50;
   timeOfLastControlChange: number = Date.now();
   // Variables for swipe controls
@@ -12,6 +14,20 @@ export class ControlsDirective {
   startX: number;
   startY: number;
   constructor(private gameService: GameService) {}
+
+  ngOnInit(): void {
+    this.gameControlsSubscription = this.gameService.controls.subscribe(
+      (direction: Direction) => {
+        this.directionMode = direction;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    if (this.gameControlsSubscription) {
+      this.gameControlsSubscription.unsubscribe();
+    }
+  }
 
   @HostListener('window:keydown', ['$event']) keyEvent(
     event: KeyboardEvent
@@ -115,7 +131,6 @@ export class ControlsDirective {
   up(): void {
     if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
       this.timeOfLastControlChange = Date.now();
-      this.directionMode = 'up';
       this.gameService.controls.next('up');
     }
   }
@@ -123,7 +138,6 @@ export class ControlsDirective {
   down(): void {
     if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
       this.timeOfLastControlChange = Date.now();
-      this.directionMode = 'down';
       this.gameService.controls.next('down');
     }
   }
@@ -131,7 +145,6 @@ export class ControlsDirective {
   left(): void {
     if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
       this.timeOfLastControlChange = Date.now();
-      this.directionMode = 'left';
       this.gameService.controls.next('left');
     }
   }
@@ -139,7 +152,6 @@ export class ControlsDirective {
   right(): void {
     if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
       this.timeOfLastControlChange = Date.now();
-      this.directionMode = 'right';
       this.gameService.controls.next('right');
     }
   }
