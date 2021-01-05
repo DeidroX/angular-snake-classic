@@ -37,8 +37,8 @@ export class GameService {
   yVelocity = 0;
 
   // Speed
-  readonly SPEED = 100;
-  gameSpeed = this.SPEED;
+  difficultySpeed = 100;
+  gameSpeed: number;
 
   // Score
   score = 0;
@@ -49,6 +49,7 @@ export class GameService {
   constructor() {}
 
   initGame(context: CanvasRenderingContext2D): void {
+    this.gameSpeed = this.difficultySpeed;
     this.context = context;
     this.context.canvas.width = this.width;
     this.context.canvas.height = this.height;
@@ -103,7 +104,7 @@ export class GameService {
     window.clearInterval(this.gameLoopInterval);
     this.context.clearRect(0, 0, this.width, this.height);
     this.score = 0;
-    this.gameSpeed = this.SPEED;
+    this.gameSpeed = this.difficultySpeed;
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.snakeX = 9;
@@ -114,6 +115,10 @@ export class GameService {
     this.foodY = Math.floor(Math.random() * this.tileCount);
     this.isGameOver = false;
     this.controls.next('right');
+  }
+
+  tryAgain(): void {
+    this.clearBoard();
     this.startGameLoop();
   }
 
@@ -170,7 +175,7 @@ export class GameService {
       this.foodX = Math.floor(Math.random() * this.tileCount);
       this.foodY = Math.floor(Math.random() * this.tileCount);
       this.snakeBodySize++;
-      this.gameSpeed = this.SPEED - this.score;
+      this.gameSpeed = this.difficultySpeed - this.score;
       ++this.score;
     }
   }
@@ -209,9 +214,9 @@ export class GameService {
   drawGameOverScreen(): void {
     this.context.fillStyle = '#86f3ff';
     this.context.font = '40px monospace';
-    this.context.fillText('Game Over!', 57, this.height / 1.9);
+    this.context.fillText('Game Over!', 57, this.height / 2);
     this.context.font = '20px monospace';
-    this.context.fillText('Push to try again', 67, this.height / 1.6);
+    this.context.fillText('Push to try again', 67, this.height / 1.7);
   }
 
   moveUp(): void {

@@ -8,12 +8,39 @@
   <div *ngIf="hasStarted" class="game-screen">
     <app-game-canvas></app-game-canvas>
   </div>
+  <div *ngIf="!hasStarted">
+    <button
+      class="button-difficulty-invert noselect"
+      (click)="gameService.difficultySpeed = 150"
+      [ngClass]="gameService.difficultySpeed === 150 ? 'active' : ''"
+    >
+      Easy
+    </button>
+    <button
+      class="button-difficulty-invert noselect"
+      (click)="gameService.difficultySpeed = 100"
+      [ngClass]="gameService.difficultySpeed === 100 ? 'active' : ''"
+    >
+      Medium
+    </button>
+    <button
+      class="button-difficulty-invert noselect"
+      (click)="gameService.difficultySpeed = 75"
+      [ngClass]="gameService.difficultySpeed === 75 ? 'active' : ''"
+    >
+      Hard
+    </button>
+  </div>
   <button
-    class="button noselect"
-    [ngClass]="gameService.inverted ? 'active' : 'inactive'"
+    *ngIf="!hasStarted"
+    class="button-difficulty-invert noselect"
+    [ngClass]="gameService.inverted ? 'active' : ''"
     (click)="gameService.inverted = !gameService.inverted"
   >
     Invert controls (mobile)
+  </button>
+  <button *ngIf="hasStarted" class="button-back noselect" (click)="onBack()">
+    Back
   </button>
   <app-footer></app-footer>
 </div>

@@ -11,4 +11,9 @@ export class AppComponent implements OnInit {
   constructor(public gameService: GameService) {}
 
   ngOnInit(): void {}
+
+  onBack(): void {
+    this.gameService.clearBoard();
+    this.hasStarted = !this.hasStarted;
+  }
 }

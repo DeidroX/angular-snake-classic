@@ -21,16 +21,37 @@
   background-color: black;
   color: #86f3ff;
   font-weight: bold;
-  margin: 5em 0;
+  margin: 3.5em 0;
+}
+
+.button-difficulty-invert {
+  font-family: monospace;
+  border-style: none;
+  padding: 0.8em;
+  border-radius: 1em;
+  box-shadow: 2px 2px 4px black;
+  font-size: 1.2em;
+  background-color: black;
+  color: #86f3ff;
+  font-weight: bold;
+  margin: 0.5em;
+}
+
+.button-back {
+  font-family: monospace;
+  border-style: none;
+  padding: 0.8em;
+  border-radius: 1em;
+  box-shadow: 2px 2px 4px black;
+  font-size: 1.2em;
+  background-color: black;
+  color: #86f3ff;
+  font-weight: bold;
+  margin-top: 1em;
 }
 
 .active {
   color: #fa9c5e;
-  margin: 2em 0 0.5em 0;
-}
-
-.inactive {
-  margin: 2em 0 0.5em 0;
 }
 
 .noselect {

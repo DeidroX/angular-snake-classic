@@ -27,7 +27,7 @@ export class GameCanvasComponent implements OnInit, OnDestroy {
 
   onTryAgain(): void {
     if (this.gameService.isGameOver) {
-      this.gameService.clearBoard();
+      this.gameService.tryAgain();
     }
   }
 }
