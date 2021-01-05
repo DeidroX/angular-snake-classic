@@ -1,10 +1,19 @@
 <div class="wrapper">
   <app-header></app-header>
   <div *ngIf="!hasStarted">
-    <button class="button" (click)="hasStarted = !hasStarted">Push to start the game</button>
+    <button class="button noselect" (click)="hasStarted = !hasStarted">
+      Push to start the game
+    </button>
   </div>
   <div *ngIf="hasStarted" class="game-screen">
     <app-game-canvas></app-game-canvas>
   </div>
+  <button
+    class="button noselect"
+    [ngClass]="gameService.inverted ? 'active' : 'inactive'"
+    (click)="gameService.inverted = !gameService.inverted"
+  >
+    Invert controls (mobile)
+  </button>
   <app-footer></app-footer>
 </div>

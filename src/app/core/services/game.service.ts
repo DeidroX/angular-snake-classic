@@ -8,6 +8,9 @@ export class GameService {
   // Context
   context: CanvasRenderingContext2D;
 
+  // Game Loop
+  gameLoopInterval: number;
+
   // Size of the board
   readonly width = 324;
   readonly height = 324;
@@ -28,6 +31,7 @@ export class GameService {
 
   // Controls
   readonly controls = new BehaviorSubject<Direction>('right');
+  inverted = false;
   gameControlsSubscription: Subscription;
   xVelocity = 0;
   yVelocity = 0;
@@ -35,7 +39,6 @@ export class GameService {
   // Speed
   readonly SPEED = 100;
   gameSpeed = this.SPEED;
-  currentTime = Date.now();
 
   // Score
   score = 0;
@@ -54,19 +57,20 @@ export class GameService {
   }
 
   startGameLoop(): void {
-    if (Date.now() > this.currentTime) {
-      this.currentTime += this.gameSpeed;
-      this.changeSnakePosition();
-      if (this.checkGameOverConditions()) {
-        return;
-      }
-      this.checkFoodCollision();
-      this.drawBoard();
-      this.drawFood();
-      this.drawSnake();
-      this.drawScore();
+    this.changeSnakePosition();
+    if (this.checkGameOverConditions()) {
+      window.clearInterval(this.gameLoopInterval);
+      return;
     }
-    requestAnimationFrame(this.startGameLoop.bind(this));
+    this.checkFoodCollision();
+    this.drawBoard();
+    this.drawSnake();
+    this.drawFood();
+    this.drawScore();
+    this.gameLoopInterval = window.setTimeout(
+      this.startGameLoop.bind(this),
+      this.gameSpeed
+    );
   }
 
   initGameControls(): void {
@@ -96,6 +100,7 @@ export class GameService {
   }
 
   clearBoard(): void {
+    window.clearInterval(this.gameLoopInterval);
     this.context.clearRect(0, 0, this.width, this.height);
     this.score = 0;
     this.gameSpeed = this.SPEED;
@@ -115,7 +120,7 @@ export class GameService {
   drawScore(): void {
     this.context.fillStyle = '#86f3ff';
     this.context.font = '12px monospace';
-    this.context.fillText('Score: ' + this.score, this.width - 70, 12);
+    this.context.fillText('Score: ' + this.score, this.width - 80, 20);
   }
 
   drawSnake(): void {
@@ -203,14 +208,10 @@ export class GameService {
 
   drawGameOverScreen(): void {
     this.context.fillStyle = '#86f3ff';
-    this.context.font = '50px monospace';
-    this.context.fillText('Game Over!', this.width / 10, this.height / 1.9);
+    this.context.font = '40px monospace';
+    this.context.fillText('Game Over!', 57, this.height / 1.9);
     this.context.font = '20px monospace';
-    this.context.fillText(
-      'Push to try again',
-      this.width / 4.5,
-      this.height / 1.6
-    );
+    this.context.fillText('Push to try again', 67, this.height / 1.6);
   }
 
   moveUp(): void {

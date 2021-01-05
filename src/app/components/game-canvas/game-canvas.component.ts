@@ -9,8 +9,8 @@ import { GameService } from '../../core/services/game.service';
 
 @Component({
   selector: 'app-game-canvas',
-  template: '<canvas (click)="onTryAgain()" appControls #canvas></canvas>',
-  styles: ['canvas {box-shadow: 4px 4px 10px black; margin: 0; padding: 0; }'],
+  template: '<canvas class="noselect" (click)="onTryAgain()" appControls #canvas></canvas>',
+  styleUrls: ['./game-canvas.component.css'],
 })
 export class GameCanvasComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;

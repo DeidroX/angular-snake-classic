@@ -5,6 +5,8 @@ import { Direction } from '../types/direction.type';
 @Directive({ selector: '[appControls]' })
 export class ControlsDirective {
   directionMode: Direction = 'right';
+  readonly minTimeGap = 50;
+  timeOfLastControlChange: number = Date.now();
   // Variables for swipe controls
   minDistance = 40;
   startX: number;
@@ -57,64 +59,88 @@ export class ControlsDirective {
       return;
     }
 
-    // UP
-    if (
-      this.startY < y &&
-      Math.abs(this.startY - y) >= this.minDistance &&
-      this.directionMode !== 'up' &&
-      this.directionMode !== 'down'
-    ) {
-      this.up();
-    }
-
-    // DOWN
     if (
       this.startY > y &&
       this.startY - y >= this.minDistance &&
       this.directionMode !== 'down' &&
       this.directionMode !== 'up'
     ) {
-      this.down();
+      if (!this.gameService.inverted) {
+        this.up();
+      } else {
+        this.down();
+      }
     }
 
-    // LEFT
     if (
-      this.startX < x &&
-      Math.abs(this.startX - x) >= this.minDistance &&
-      this.directionMode !== 'left' &&
-      this.directionMode !== 'right'
+      this.startY < y &&
+      Math.abs(this.startY - y) >= this.minDistance &&
+      this.directionMode !== 'up' &&
+      this.directionMode !== 'down'
     ) {
-      this.left();
+      if (!this.gameService.inverted) {
+        this.down();
+      } else {
+        this.up();
+      }
     }
 
-    // RIGHT
     if (
       this.startX > x &&
       this.startX - x >= this.minDistance &&
       this.directionMode !== 'right' &&
       this.directionMode !== 'left'
     ) {
-      this.right();
+      if (!this.gameService.inverted) {
+        this.left();
+      } else {
+        this.right();
+      }
+    }
+
+    if (
+      this.startX < x &&
+      Math.abs(this.startX - x) >= this.minDistance &&
+      this.directionMode !== 'left' &&
+      this.directionMode !== 'right'
+    ) {
+      if (!this.gameService.inverted) {
+        this.right();
+      } else {
+        this.left();
+      }
     }
   }
 
   up(): void {
-    this.directionMode = 'up';
-    this.gameService.controls.next('up');
+    if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
+      this.timeOfLastControlChange = Date.now();
+      this.directionMode = 'up';
+      this.gameService.controls.next('up');
+    }
   }
 
   down(): void {
-    this.directionMode = 'down';
-    this.gameService.controls.next('down');
+    if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
+      this.timeOfLastControlChange = Date.now();
+      this.directionMode = 'down';
+      this.gameService.controls.next('down');
+    }
   }
 
   left(): void {
-    this.directionMode = 'left';
-    this.gameService.controls.next('left');
+    if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
+      this.timeOfLastControlChange = Date.now();
+      this.directionMode = 'left';
+      this.gameService.controls.next('left');
+    }
   }
 
   right(): void {
-    this.directionMode = 'right';
-    this.gameService.controls.next('right');
+    if (Date.now() - this.timeOfLastControlChange > this.minTimeGap) {
+      this.timeOfLastControlChange = Date.now();
+      this.directionMode = 'right';
+      this.gameService.controls.next('right');
+    }
   }
 }
