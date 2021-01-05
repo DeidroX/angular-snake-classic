@@ -187,12 +187,26 @@ export class GameService {
 
   checkFoodCollision(): void {
     if (this.snakeX === this.foodX && this.snakeY === this.foodY) {
-      this.foodX = Math.floor(Math.random() * this.tileCount);
-      this.foodY = Math.floor(Math.random() * this.tileCount);
+      this.determinNextFoodPosition();
       this.snakeBodySize++;
       this.gameSpeed = this.difficultySpeed - this.score;
       ++this.score;
     }
+  }
+
+  determinNextFoodPosition(): void {
+    this.foodX = Math.floor(Math.random() * this.tileCount);
+    this.foodY = Math.floor(Math.random() * this.tileCount);
+    if (this.foodX === this.snakeX && this.foodY === this.snakeY) {
+      this.determinNextFoodPosition();
+      return;
+    }
+    this.snakeBody.forEach((bodyPart) => {
+      if (this.foodX === bodyPart.x && this.foodY === bodyPart.y) {
+        this.determinNextFoodPosition();
+        return;
+      }
+    });
   }
 
   changeSnakePosition(): void {
